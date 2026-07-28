@@ -6,13 +6,13 @@ It's a tracker app with a galaxy-themed design. In this project, the backend is 
 
 **Frontend:**
 * Next.js (React)
-* Использовали Tailwind? (Если да, можно дописать)
+* Tailwind
 
 **Backend & Database:**
 * .NET Web API (C#)
 * Entity Framework Core
 * PostgreSQL
-
+* JWT
 ---
 
 ## 📱 Screenshots
