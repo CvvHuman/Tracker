@@ -1,0 +1,53 @@
+# ==========================================
+# 1. Специфичное для .NET (C#)
+# ==========================================
+[Bb]in/
+[Oo]bj/
+[Mm]odules/
+
+
+*.user
+*.userosscache
+*.sln.docstates
+
+
+appsettings.Development.json
+appsettings.Local.json
+
+.vs/
+.idea/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+
+*.log
+TestResults/
+
+
+# EfMigrations/
+
+
+node_modules/
+/npm-debug.log*
+/yarn-error.log*
+/yarn-debug.log*
+
+
+.next/
+out/
+build/
+
+
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+
+.vercel
+.turbo
+*.tsbuildinfo
