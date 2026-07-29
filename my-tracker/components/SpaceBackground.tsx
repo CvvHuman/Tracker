@@ -12,7 +12,6 @@ export default function SpaceBackground() {
 
     let animationFrameId: number;
     
-    // Адаптивный размер под экран
     const resizeCanvas = () => {
       if (canvas) {
         canvas.width = window.innerWidth;
@@ -22,12 +21,10 @@ export default function SpaceBackground() {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    // Создаем массив звезд (80 штук)
     const stars = Array.from({ length: 80 }, () => ({
       x: Math.random() * window.innerWidth,
       y: Math.random() * window.innerHeight,
       size: Math.random() * 1.5,
-      // Скорость мерцания у каждого своя
       blinkSpeed: 0.01 + Math.random() * 0.02,
       opacity: Math.random(),
       growing: true
@@ -39,7 +36,6 @@ export default function SpaceBackground() {
       ctx.fillStyle = '#ffffff';
 
       stars.forEach((star) => {
-        // Логика мягкого мерцания
         if (star.growing) {
           star.opacity += star.blinkSpeed;
           if (star.opacity >= 0.8) star.growing = false;
@@ -48,7 +44,6 @@ export default function SpaceBackground() {
           if (star.opacity <= 0.1) star.growing = true;
         }
 
-        // Отрисовка звезды
         ctx.globalAlpha = star.opacity;
         ctx.beginPath();
         ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);

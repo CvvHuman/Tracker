@@ -1,3 +1,4 @@
+//для проверок
 export const NODES = [
   { id: '11111111-1111-1111-1111-111111111111', label: 'HOME', angle: 225, color: '#00ffcc' },
   { id: '22222222-2222-2222-2222-222222222222', label: 'WORK', angle: 270, color: '#3b82f6' },

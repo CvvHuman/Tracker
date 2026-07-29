@@ -1,3 +1,4 @@
+//для текстирования без подключения к бэкэнду
 export interface OrbitNode {
   id: string;
   label: string;

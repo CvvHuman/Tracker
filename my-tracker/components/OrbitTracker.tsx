@@ -73,13 +73,12 @@ export default function OrbitTracker() {
 
 
 
-  // Изменение статуса выполнения задачи
   const toggleTask = async (nodeId: string, task: TodoTask) => {
     try {
       const updatedTask = await api.updateTask({
         id: task.id,
         title: task.title,
-        isCompleted: !task.isCompleted, // Инвертируем статус чекбокса
+        isCompleted: !task.isCompleted, 
         dueDate: task.dueDate
       });
 
@@ -99,7 +98,6 @@ export default function OrbitTracker() {
     setEditingText(task.title);
   };
 
-  // Сохранение отредактированного текста задачи
   const saveEditing = async (nodeId: string, task: TodoTask) => {
     if (!editingText.trim() || editingText === task.title) {
       setEditingTaskId(null);
@@ -125,18 +123,16 @@ export default function OrbitTracker() {
     }
   };
 
-  // Добавление новой задачи на бэкенд
 const addTask = async (nodeId: string) => {
   if (!newTaskText.trim()) return;
 
-  // Находим на форме созданный нами инпут даты
   const dateInput = document.getElementById('task-due-date') as HTMLInputElement | null;
   const chosenDate = dateInput && dateInput.value ? new Date(dateInput.value).toISOString() : null;
 
   try {
     const newTask = await api.createTask({
       title: newTaskText.trim(),
-      dueDate: chosenDate, // Передаем реальную выбранную дату вместо null
+      dueDate: chosenDate, 
       idNode: nodeId
     });
 
@@ -145,7 +141,6 @@ const addTask = async (nodeId: string) => {
       [nodeId]: [...(prev[nodeId] || []), newTask]
     }));
     
-    // Очищаем текстовое поле и инпут даты после успешного добавления
     setNewTaskText('');
     if (dateInput) dateInput.value = '';
   } catch (err) {
@@ -155,7 +150,6 @@ const addTask = async (nodeId: string) => {
 };
 
 
-  // Удаление задачи
   const deleteTask = async (nodeId: string, taskId: string) => {
     try {
       await api.deleteTask(taskId);
@@ -169,15 +163,12 @@ const addTask = async (nodeId: string) => {
     }
   };
 
-  // Глобальные вычисления статистики на клиенте
   const allTasks = Object.values(tasks).flat();
   const totalGlobalTasks = allTasks.length;
   const completedGlobalTasks = allTasks.filter(t => t.isCompleted).length;
   const globalPercentage = totalGlobalTasks > 0 ? Math.round((completedGlobalTasks / totalGlobalTasks) * 100) : 0;
 
-  // Информация о выбранной активной ноде
   const activeNodeInfo = nodes.find(n => n.id === activeNode);
-  // Находим индекс активной ноды, чтобы определить её угол для отрисовки линии в SVG
   const activeNodeIndex = nodes.findIndex(n => n.id === activeNode);
   const activeAngle = activeNodeIndex !== -1 ? DEFAULT_ANGLES[activeNodeIndex % DEFAULT_ANGLES.length] : 0;
 
@@ -216,7 +207,7 @@ const addTask = async (nodeId: string) => {
             whileTap={{ scale: 0.95 }} 
             onClick={() => {
               localStorage.removeItem('user_session');
-              localStorage.removeItem('auth_token'); // Удаляем токен при выходе
+              localStorage.removeItem('auth_token'); 
               setUser(null);
               setNodes([]);
               setTasks({});
@@ -274,15 +265,12 @@ const addTask = async (nodeId: string) => {
             <p className="text-xs text-slate-500 italic">No tasks</p>
           ) : (
             currentCategoryTasks.map((task) => {
-              // Логика расчета времени до завершения задачи
               let dueText = '';
               if (task.dueDate) {
                 const targetDate = new Date(task.dueDate);
-                // Сбрасываем время для точного расчета дней
                 const targetToday = new Date();
                 targetToday.setHours(0, 0, 0, 0);
                 const targetDue = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
-                
                 const diffTime = targetDue.getTime() - targetToday.getTime();
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
                 
@@ -295,9 +283,7 @@ const addTask = async (nodeId: string) => {
               return (
                 <div key={task.id} className="flex items-center justify-between text-xs group py-0.5">
                   
-                  {/* Левая часть: Чекбокс + Текст + Дедлайн */}
                   <div className="flex items-center space-x-3 flex-1 min-w-0">
-                    {/* Кнопка-Чекбокс */}
                     <button 
                       onClick={() => toggleTask(activeNode, task)} 
                       className="w-4 h-4 rounded flex items-center justify-center border transition-colors shrink-0" 
@@ -310,7 +296,6 @@ const addTask = async (nodeId: string) => {
                       )}
                     </button>
 
-                    {/* Текст задачи или Режим редактирования */}
                     {editingTaskId === task.id ? (
                       <input 
                         type="text" 
@@ -329,7 +314,6 @@ const addTask = async (nodeId: string) => {
                         >
                           {task.title}
                         </span>
-                        {/* Вывод оставшегося времени */}
                         {dueText && !task.isCompleted && (
                           <span className={`text-[9px] font-bold mt-0.5 ${dueText === 'Overdue' ? 'text-rose-500 animate-pulse' : 'text-slate-500'}`}>
                             ⏳ {dueText}
@@ -339,7 +323,6 @@ const addTask = async (nodeId: string) => {
                     )}
                   </div>
 
-                  {/* Правая часть: Кнопки управления (появляются при наведении) */}
                   {editingTaskId !== task.id && (
                     <div className="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity ml-2 shrink-0">
                       <button onClick={() => startEditing(task)} className="text-slate-500 hover:text-white" title="Редактировать">
@@ -360,7 +343,6 @@ const addTask = async (nodeId: string) => {
     )}
   </AnimatePresence>
 </div>
-      {/* ОРБИТЫ И ЦЕНТР */}
       <div className="relative w-[700px] h-[700px] flex items-center justify-center">
         <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-20">
           <circle cx="350" cy="350" r={RADIUS} fill="none" stroke="#475569" strokeWidth="1" strokeDasharray="4 4" />
@@ -379,11 +361,9 @@ const addTask = async (nodeId: string) => {
         </div>
 
 {nodes.map((node, index) => {
-  // Вычисляем угол для каждой ноды динамически из фиксированного массива углов
   const angle = DEFAULT_ANGLES[index % DEFAULT_ANGLES.length];
   const rad = (angle * Math.PI) / 180;
   
-  // Координаты позиционирования кнопки на окружности относительно центра (350, 350)
   const x = 350 + RADIUS * Math.cos(rad);
   const y = 350 + RADIUS * Math.sin(rad);
   
@@ -403,17 +383,14 @@ const addTask = async (nodeId: string) => {
       }} 
       className="absolute w-16 h-16 rounded-full border bg-[#06061e] flex flex-col items-center justify-center transition-all duration-300 group hover:scale-110 z-20"
     >
-      {/* Название категории (усекается, если не влезает) */}
       <span className="text-[10px] font-bold text-slate-300 group-hover:text-white transition-colors truncate max-w-[55px]">
         {node.name}
       </span>
       
-      {/* Счетчик задач (выполнено / всего) */}
       <span className="text-[9px] text-slate-500 mt-0.5">
         {categoryTasks.filter(t => t.isCompleted).length}/{categoryTasks.length}
       </span>
       
-      {/* Эффект пульсации (Ping) вокруг активной ноды */}
       {isActive && (
         <span 
           style={{ backgroundColor: node.colorHex }} 

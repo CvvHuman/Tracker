@@ -6,10 +6,9 @@ if (typeof window === 'undefined') {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 }
 
-const API_URL = 'https://localhost:7050/api'; // Замените порт на ваш HTTP-порт из launchSettings.json
+const API_URL = 'https://localhost:7050/api'; 
 
-
-// Получение токена из хранилища
+// Получение токена 
 const getAuthHeader = () => {
   if (typeof window === 'undefined') return {};
   const token = localStorage.getItem('auth_token');
@@ -25,34 +24,22 @@ export const api = {
     return res.json();
   },
 
-  // // TASKS (Личные для пользователя)
-  // async getTasks(nodeId: string): Promise<TodoTask[]> {
-  //   const res = await fetch(`${API_URL}/tasks?nodeId=${nodeId}`, { 
-  //     headers: getAuthHeader() as HeadersInit 
-  //   });
-  //   if (!res.ok) throw new Error('Ошибка загрузки задач');
-  //   return res.json();
-  // },
-
   async createTask(task: TodoTaskCreate): Promise<TodoTask> {
-    // Формируем объект команды строго под структуру C# CreateTaskCommand
     const command = {
       title: task.title,
       dueDate: task.dueDate,
-      nodeId: task.idNode // Маппим фронтендовый idNode в понятный бэкенду nodeId
+      nodeId: task.idNode 
     };
 
-    // Отправляем именно command, а не task с большой буквы в роуте "Tasks"
     const res = await fetch(`${API_URL}/Tasks`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...getAuthHeader() } as HeadersInit,
-      body: JSON.stringify(command), // Передаем command бэкенду
+      body: JSON.stringify(command), 
     });
 
     if (!res.ok) throw new Error('Ошибка создания задачи');
     
-    // Так как ваш C# CreateTaskCommandHandler возвращает Guid (return Ok(id)),
-    // мы считываем этот ID из ответа и собираем полный объект для фронтенда:
+
     const taskId = await res.json();
     return {
       id: taskId,

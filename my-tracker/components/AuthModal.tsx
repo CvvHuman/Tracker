@@ -10,7 +10,7 @@ interface AuthModalProps {
 export default function AuthModal({ onAuthSuccess }: AuthModalProps) {
   const [isRegister, setIsRegister] = useState(false);
   const [email, setEmail] = useState('');
-  const [username, setUsername] = useState(''); // Используется как nickName для бэкенда
+  const [username, setUsername] = useState(''); 
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -22,7 +22,6 @@ export default function AuthModal({ onAuthSuccess }: AuthModalProps) {
 
     try {
       if (isRegister) {
-        // Отправка RegistrationCommand на бэкенд
         const data = await api.register({
           nickName: username,
           email: email,
@@ -34,13 +33,11 @@ export default function AuthModal({ onAuthSuccess }: AuthModalProps) {
         localStorage.setItem('user_session', data.nickName);
         onAuthSuccess(data.nickName);
       } else {
-        // Отправка LoginCommand на бэкенд
         const data = await api.login({
           email: email,
           password: password,
         });
 
-        // Сохраняем токен и сессию
         localStorage.setItem('auth_token', data.token);
         localStorage.setItem('user_session', data.nickName);
         onAuthSuccess(data.nickName);
@@ -68,8 +65,6 @@ export default function AuthModal({ onAuthSuccess }: AuthModalProps) {
         <h2 className="text-xl font-bold tracking-widest text-white text-center uppercase mb-6">
           {isRegister ? '🌌 System Registration' : '🚀 System Login'}
         </h2>
-
-        {/* Вывод ошибок от бэкенда */}
         {error && (
           <div className="mb-4 p-2 text-xs text-rose-400 bg-rose-950/30 border border-rose-900/50 rounded text-center">
             {error}
